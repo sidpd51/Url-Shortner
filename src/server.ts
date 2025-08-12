@@ -1,10 +1,10 @@
 import express from 'express';
 import { serverConfig } from './config';
-import { logger } from './config/logger.config';
+import { initRedis } from './config/redis';
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
 import { appErrorHandler } from './middlewares/error.middleware';
 import router from './routers/v1';
-import { initRedis } from './config/redis';
+import { connectDB } from './config/db';
 
 
 const app = express();
@@ -19,6 +19,6 @@ app.use(appErrorHandler);
 
 app.listen(PORT, async () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-    await initRedis()
-    logger.info('Database connection has been established successfully!');
+    await initRedis();
+    await connectDB();
 });
